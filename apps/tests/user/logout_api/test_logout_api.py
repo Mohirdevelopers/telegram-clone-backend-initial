@@ -5,6 +5,24 @@ from unittest.mock import patch
 from unittest.mock import MagicMock
 from share.services import TokenService
 from core import settings
+from enum import Enum
+from random import choice
+
+
+class BaseEnum(Enum):
+    @classmethod
+    def choices(cls):
+        return [(choice.value, choice.name) for choice in cls]
+
+    @classmethod
+    def values(cls):
+        return [choice.value for choice in cls]
+
+
+class TokenType(Enum):
+    ACCESS = "access"
+    REFRESH = "refresh"
+
 
 LOGOUT_URL = "/api/users/logout/"
 
@@ -34,13 +52,13 @@ def test_logout(mock_add_token, api_client, user_factory, mocker, tokens):
     mock_add_token.assert_any_call(
         uuid.UUID(str(user.id)),
         "fake_token",
-        "access",
+        TokenType.ACCESS,
         settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
     )
     mock_add_token.assert_any_call(
         uuid.UUID(str(user.id)),
         "fake_token",
-        "refresh",
+        TokenType.REFRESH,
         settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
     )
 
