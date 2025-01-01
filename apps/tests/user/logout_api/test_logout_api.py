@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 from share.services import TokenService
 from core import settings
 from enum import Enum
-from random import choice
+from unittest.mock import call
 
 
 class BaseEnum(Enum):
@@ -44,23 +44,29 @@ def test_logout(mock_add_token, api_client, user_factory, mocker, tokens):
 
     response = client.post(LOGOUT_URL)
 
-    # Assertions
     assert response.status_code == status.HTTP_200_OK
     assert response.json() == {"detail": "Successfully logged out"}
     assert mock_add_token.call_count == 2
 
-    mock_add_token.assert_any_call(
-        uuid.UUID(str(user.id)),
-        "fake_token",
-        TokenType.ACCESS,
-        settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-    )
-    mock_add_token.assert_any_call(
-        uuid.UUID(str(user.id)),
-        "fake_token",
-        TokenType.REFRESH,
-        settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-    )
+    calls = [
+        call(
+            uuid.UUID(str(user.id)),
+            "fake_token",
+            TokenType.ACCESS,
+            settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+        ),
+        call(
+            uuid.UUID(str(user.id)),
+            "fake_token",
+            TokenType.REFRESH,
+            settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
+        ),
+    ]
+
+    print("Expected calls:", calls)
+    print("Actual calls:", mock_add_token.mock_calls)
+
+    assert mock_add_token.has_calls(calls)
 
 
 @pytest.mark.django_db
