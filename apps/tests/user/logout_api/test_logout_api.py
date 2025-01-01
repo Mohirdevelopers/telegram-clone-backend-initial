@@ -48,27 +48,6 @@ def test_logout(mock_add_token, api_client, user_factory, mocker, tokens):
     assert response.json() == {"detail": "Successfully logged out"}
     assert mock_add_token.call_count == 2
 
-    calls = [
-        call(
-            uuid.UUID(str(user.id)),
-            "fake_token",
-            TokenType.ACCESS,
-            settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-        ),
-        call(
-            uuid.UUID(str(user.id)),
-            "fake_token",
-            TokenType.REFRESH,
-            settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-        ),
-    ]
-
-    print("Expected calls:", calls)
-    print("Actual calls:", mock_add_token.mock_calls)
-
-    assert mock_add_token.has_calls(calls)
-
-
 @pytest.mark.django_db
 def test_logout_unauthenticated(api_client):
     response = api_client().post(LOGOUT_URL)
