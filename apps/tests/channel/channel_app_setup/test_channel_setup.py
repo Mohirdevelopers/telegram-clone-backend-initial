@@ -65,11 +65,11 @@ def test_channel_message_creation(user_factory):
     channel = Channel.objects.create(name="Test Channel", owner=channel_owner)
 
     message = ChannelMessage.objects.create(
-        channel=channel, user=user, text="Hello, world!"
+        channel=channel, sender=user, text="Hello, world!"
     )
 
     assert message.channel == channel
-    assert message.user == user
+    assert message.sender == user
     assert message.text == "Hello, world!"
     assert message.media.name is None
     assert str(message) == f"Message from {user.username} in {channel.name}"
@@ -86,7 +86,7 @@ def test_channel_message_likes(user_factory):
     channel = Channel.objects.create(name="Test Channel", owner=channel_owner)
 
     message = ChannelMessage.objects.create(
-        channel=channel, user=user1, text="Like this message!"
+        channel=channel, sender=user1, text="Like this message!"
     )
     message.likes.add(user2)
 
