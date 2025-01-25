@@ -13,7 +13,7 @@ def setup_data(user_factory):
     user = user_factory.create()
     channel = Channel.objects.create(name="Test Channel", owner=user)
     message = ChannelMessage.objects.create(
-        channel=channel, user=user, text="Hello, World!"
+        channel=channel, sender=user, text="Hello, World!"
     )
     return {"user": user, "channel": channel, "message": message}
 

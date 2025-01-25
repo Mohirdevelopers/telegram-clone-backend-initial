@@ -18,10 +18,10 @@ class TestChannelMessageListCreateView:
         ChannelMembership.objects.create(channel=channel, user=member)
 
         ChannelMessage.objects.create(
-            channel=channel, user=channel.owner, text="First Message"
+            channel=channel, sender=channel.owner, text="First Message"
         )
         ChannelMessage.objects.create(
-            channel=channel, user=member, text="Second Message"
+            channel=channel, sender=member, text="Second Message"
         )
 
         mock_redis_client = MagicMock()
@@ -108,7 +108,7 @@ class TestChannelMessageDetailView:
     @pytest.fixture
     def message(self, channel):
         return ChannelMessage.objects.create(
-            channel=channel, user=channel.owner, text="Test Message"
+            channel=channel, sender=channel.owner, text="Test Message"
         )
 
     def test_read_message(self, mocker, tokens, api_client, message, user_factory):
