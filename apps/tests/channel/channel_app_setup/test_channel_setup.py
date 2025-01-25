@@ -32,7 +32,7 @@ def test_channel_creation(user_factory):
 
     assert channel.name == "Test Channel"
     assert channel.owner == user
-    assert channel.channel_type == ChannelType.PUBLIC
+    assert channel.channel_type == ChannelType.PUBLIC.value
     assert str(channel) == "Test Channel"
 
 
@@ -48,7 +48,7 @@ def test_channel_membership_creation(user_factory):
 
     assert membership.user == user
     assert membership.channel == channel
-    assert membership.role == ChannelMembershipType.MEMBER
+    assert membership.role == ChannelMembershipType.MEMBER.value
 
     # Test unique_together constraint
     with pytest.raises(ValidationError):
